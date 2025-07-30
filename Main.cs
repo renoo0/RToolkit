@@ -9,7 +9,7 @@ namespace Utilities
 {
     public class Plugin : Plugin<Config> 
     {
-        public static readonly Plugin Instance = new Plugin();
+        public static Plugin Instance { get; private set; }
 
         public override PluginPriority Priority { get; } = PluginPriority.Medium;
 
@@ -23,11 +23,13 @@ namespace Utilities
 
         public override void OnEnabled()
         {
+            Instance = this;
             RegisterEvents();
         }
 
         public override void OnDisabled()
         {
+            Instance = null;
             UnregisterEvents();
         }
 
