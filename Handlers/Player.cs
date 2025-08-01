@@ -20,7 +20,7 @@ namespace Utilities.Handlers
             Map.Broadcast(4, message);
         }
 
-        public void OnJoined(JoinedEventArgs ev)
+        public void OnVerified(VerifiedEventArgs ev)
         {
             string message = Config.JoinedMessage.Replace("{player}", ev.Player.Nickname);
             Map.Broadcast(2, message);

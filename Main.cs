@@ -42,7 +42,7 @@ namespace Utilities
             Server.RoundStarted += server.OnRoundStarted;
 
             Player.Left += player.OnLeft;
-            Player.Joined += player.OnJoined;
+            Player.Verified += player.OnVerified;
             Player.ChangingRole += player.OnChangingRole;
         }
 
@@ -52,7 +52,7 @@ namespace Utilities
             Server.RoundStarted -= server.OnRoundStarted;
 
             Player.Left -= player.OnLeft;
-            Player.Joined -= player.OnJoined;
+            Player.Verified -= player.OnVerified;
             Player.ChangingRole -= player.OnChangingRole;
 
             player = null;

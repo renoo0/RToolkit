@@ -23,5 +23,12 @@ namespace Utilities
             {"MTF", "Eliminate SCPs, escort scientists, enemies: Chaos Insurgency"},
             {"Chaos", "Rescue Class D, enemies: MTF, guards, scientists"}
         };
+
+        public bool PowerOutage { get; set; } = true;
+        public float PowerOutageTimeout { get; set; } = 0.1f; // Minutes
+        public float PowerOutageRollInterval { get; set; } = 0.1f;  // Minutes
+        public float PowerOutageDurationMin { get; set; } = 1f; // Seconds
+        public float PowerOutageDurationMax { get; set; } = 10f; // Seconds
+        public float PowerOutageChance { get; set; } = 0.25f;
     }
 }
