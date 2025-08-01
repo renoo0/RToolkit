@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using Exiled.API.Enums;
 using Exiled.API.Features.Toys;
 using UnityEngine;
 using MEC;
@@ -11,7 +12,7 @@ namespace Utilities.Handlers
         private static Config Config => Plugin.Instance.Config;
         private CoroutineHandle lightCheckCoroutine;
 
-        private string blackoutCassieMessage = "<size=0> PITCH_.2 .G4 .G4 PITCH_.9 ATTENTION ALL PITCH_.6 PERSONNEL .G2 PITCH_.8 JAM_027_4 . PITCH_.15 .G4 .G4 PITCH_9999</size><color=#d64542>Attention, <color=#f5e042>all personnel...<split><size=0> PITCH_.9 GENERATORS PITCH_.7 IN THE PITCH_.85 FACILITY HAVE BEEN PITCH_.8 DAMAGED PITCH_.2 .G4 .G4 PITCH_9999</size><color=#d67d42>Generators in <color=#f5e042>the facility <color=#d67d42>have been <color=#d64542>damaged.<split><size=0> PITCH_.8 THE FACILITY PITCH_.9 IS GOING THROUGH PITCH_.85 A BLACK OUT PITCH_.15 .G4 .G4 PITCH_9999</size><color=#d64542><color=#f5e042>The facility <color=#d67d42>is going through a <color=#000000>blackout.";
+        private string blackoutCassieMessage = "<size=0> PITCH_.2 .G4 .G4 PITCH_.9 ATTENTION PITCH_.6  .G2 PITCH_.8 JAM_027_4 . PITCH_.15 .G4 .G4 PITCH_9999</size><color=#d64542>Attention, <color=#f5e042>TEMPORARY POWER OUTAGE...<split><size=0> PITCH_.9 GENERATORS PITCH_.7";
         public void OnWaitingForPlayers()
         {
             Log.Info("Waiting for players...");
@@ -23,6 +24,53 @@ namespace Utilities.Handlers
             Map.Broadcast(6, message);
 
             lightCheckCoroutine = Timing.RunCoroutine(LightShutdownRoutine());
+
+            if (Config.Scenario)
+            {
+                Room scp173Room = Room.Get(RoomType.Lcz173);
+                Log.Info(scp173Room.Position);
+
+                Vector3 classDOffset = new Vector3(15f, 12f, 8f);
+                Vector3 scientistOffset = new Vector3(8f, 12f, 8f);
+
+                foreach (Player player in Player.List)
+                {
+                    float randX = UnityEngine.Random.Range(0.5f, 1.5f) * (UnityEngine.Random.value > 0.5f ? 1 : -1);
+                    float randZ = UnityEngine.Random.Range(0.5f, 1.5f) * (UnityEngine.Random.value > 0.5f ? 1 : -1);
+                    Vector3 randomOffset = new Vector3(randX, 0f, randZ);
+
+                    Vector3 spawnOffset;
+
+                    if (player.Role.Type == PlayerRoles.RoleTypeId.ClassD)
+                    {
+                        spawnOffset = classDOffset;
+                    }
+                    else if (player.Role.Type == PlayerRoles.RoleTypeId.Scientist)
+                    {
+                        spawnOffset = scientistOffset;
+                    }
+                    else
+                        continue;
+
+                    Vector3 rotatedMainOffset = scp173Room.Rotation * spawnOffset;
+                    Vector3 rotatedRandomOffset = scp173Room.Rotation * randomOffset;
+
+                    Vector3 finalSpawnPosition = scp173Room.Position + rotatedMainOffset + rotatedRandomOffset;
+                    player.Teleport(finalSpawnPosition);
+
+                    Timing.WaitForSeconds(Config.ScenarioDoorOpenTimeout);
+
+                    foreach (var door in scp173Room.Doors)
+                    {
+                        if (!door.IsOpen)
+                        {
+                            door.IsOpen = true;
+                            door.Unlock();
+                        }
+                    }
+                }
+            }
+
         }
 
         private IEnumerator<float> LightShutdownRoutine()

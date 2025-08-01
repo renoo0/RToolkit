@@ -25,10 +25,13 @@ namespace Utilities
         };
 
         public bool PowerOutage { get; set; } = true;
-        public float PowerOutageTimeout { get; set; } = 0.1f; // Minutes
-        public float PowerOutageRollInterval { get; set; } = 0.1f;  // Minutes
+        public float PowerOutageTimeout { get; set; } = 3f; // Minutes
+        public float PowerOutageRollInterval { get; set; } = 1f;  // Minutes
         public float PowerOutageDurationMin { get; set; } = 1f; // Seconds
         public float PowerOutageDurationMax { get; set; } = 10f; // Seconds
         public float PowerOutageChance { get; set; } = 0.25f;
+
+        public bool Scenario { get; set; } = true;
+        public float ScenarioDoorOpenTimeout { get; set; } = 5f; // Seconds
     }
 }
