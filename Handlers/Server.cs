@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Features;
 using Exiled.API.Enums;
 using Exiled.API.Features.Toys;
+using PlayerRoles;
 using UnityEngine;
 using MEC;
 using System.Collections.Generic;
@@ -23,7 +24,10 @@ namespace Utilities.Handlers
             string message = Config.RoundStartedMessage;
             Map.Broadcast(6, message);
 
-            lightCheckCoroutine = Timing.RunCoroutine(LightShutdownRoutine());
+            if (Config.PowerOutage)
+            {
+                lightCheckCoroutine = Timing.RunCoroutine(LightShutdownRoutine());
+            }
 
             if (Config.Scenario)
             {
@@ -75,7 +79,7 @@ namespace Utilities.Handlers
 
         private IEnumerator<float> LightShutdownRoutine()
         {
-            yield return Timing.WaitForSeconds(Config.PowerOutageTimeout * 60);
+            yield return Timing.WaitForSeconds(Config.PowerOutageTimeout * 60f);
 
             while (Round.IsStarted)
             {
@@ -87,12 +91,11 @@ namespace Utilities.Handlers
 
                     Map.TurnOffAllLights(outageDuration);
                     Cassie.Message(blackoutCassieMessage);
-                    Log.Info($"Lights have been shut down for {outageDuration}");
+                    Log.Info($"[Power Outage] Lights shut down for {outageDuration} seconds.");
 
                     yield return Timing.WaitForSeconds(outageDuration);
 
-                    Log.Info("Lights have been turned back on");
-                    
+                    Log.Info("[Power Outage] Lights restored.");
                 }
 
                 yield return Timing.WaitForSeconds(Config.PowerOutageRollInterval * 60);

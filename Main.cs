@@ -44,6 +44,7 @@ namespace Utilities
             Player.Left += player.OnLeft;
             Player.Verified += player.OnVerified;
             Player.ChangingRole += player.OnChangingRole;
+            Player.Spawned += player.OnSpawned;
         }
 
         public void UnregisterEvents()
@@ -54,6 +55,7 @@ namespace Utilities
             Player.Left -= player.OnLeft;
             Player.Verified -= player.OnVerified;
             Player.ChangingRole -= player.OnChangingRole;
+            Player.Spawned -= player.OnSpawned;
 
             player = null;
             server = null;

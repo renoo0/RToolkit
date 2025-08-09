@@ -1,9 +1,16 @@
 ﻿using Exiled.API.Interfaces;
+using PlayerRoles;
 using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Utilities
 {
+
+    public class ScpSpawnEntry
+    {
+        public RoleTypeId Role;
+        public float Chance;
+    }
     public class Config : IConfig
     {
         public bool IsEnabled { get; set; } = true;
@@ -33,5 +40,7 @@ namespace Utilities
 
         public bool Scenario { get; set; } = true;
         public float ScenarioDoorOpenTimeout { get; set; } = 5f; // Seconds
+
+        public float NonDefaultNpcChance { get; set; } = 0.2f;
     }
 }
